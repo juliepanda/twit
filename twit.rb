@@ -1,7 +1,6 @@
 require 'sinatra'
 require 'dinosaurus'
 
-
 Dinosaurus.configure do |config|
     config.api_key = DINO_KEY
 end
