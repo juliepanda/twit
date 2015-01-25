@@ -1,26 +1,22 @@
+<!--http://twitter.com/home?status=Put-->
 <html>
 <head>
 	<meta charset="utf-8">
 	<title>Twit</title>
 	<link rel="stylesheet" type="text/css" href="twit.css">
 	<script>
-		window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));
+		function clicked(){
+			var link = document.createElement('http://twitter.com/home?status=')
+			window.open()
+		}
+
 	</script>
 </head>
 <body>
-	<form action="/tweet" method="post" accept-charset="utf-8">
+	<form action="/tweet" name="button" method="post" accept-charset="utf-8">
 		<textarea name="tweet" placeholder="put your tweet here"></textarea><br>
-		<input type="submit" value="Tweet it">	
+		<input type="submit" value="Tweet it"">	
 	</form>
-
- <% if @clicked == true %>
-	<a href="https://twitter.com/share" class="twitter-share-button"
-	data-dnt="true"
-	data-count="none"
-	data-text= <%= "#{@word}" %> >
-	Tweet
-	</a>
-	<% end %>
 
 </body>
 </html>

@@ -2,9 +2,8 @@ require 'sinatra'
 require 'dinosaurus'
 
 
-
 Dinosaurus.configure do |config|
-  config.api_key = DINO_KEY
+    config.api_key = DINO_KEY
 end
 
 
@@ -20,11 +19,12 @@ end
 post '/tweet' do 
   @clicked = true
   @word = rejoiner(params[:tweet])
-  erb :index
+  @link = "http://twitter.com/home?status=" + @word
+  redirect @link
 end
 
 def rejoiner(string)
-  string.split(" ").map { |word| get_not_prep(word)}.join(" ")
+  string.split(" ").map { |word| get_not_prep(word)}.join("%20")
 end
 
 def get_not_prep(word)
