@@ -1,7 +1,7 @@
 ## Twit
-Tweets to Twitter after randomly "madlibbing" the tweets.
+Tweets to Twitter after "madlibbing" the tweets by converting words to their synonyms.
 
 Tasks:
- - combining Twitter native button with scrambler
- - beautify index
+ - hide DINO_KEY
+ - beautify
  - update Dinosaurus to Wordnet (better API)
