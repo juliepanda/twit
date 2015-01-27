@@ -1,12 +1,13 @@
 class Twit < Sinatra::Base 
 
   Dinosaurus.configure do |config|
-    config.api_key = '0e7ba4c2dd728d63026383259c507033'
+    config.api_key = DINO_KEY
   end
 
   before do
-    ratelimit = Ratelimit.new("messages")
-    key = 1
+    redis = Redis.new
+    count = 0
+    redis.set("key", count)
     @clicked = false
   end
 
@@ -21,13 +22,17 @@ class Twit < Sinatra::Base
   post '/tweet' do 
     @clicked = true
     word = rejoiner(params[:tweet])
-    if ratelimit.exceeded?(key, threshold: 1000, interval: 86400)
+    if (redis.get("key") > 1000)
       redirect '/error'
     else
       @link = "http://twitter.com/home?status=" + word
       redirect @link
     end
   end
+
+  def ratelimit
+  end
+
 
   def rejoiner(string)
     string.split(" ").map { |word| get_not_prep(word)}.join("%20")
@@ -55,7 +60,9 @@ class Twit < Sinatra::Base
   # picks random synonym out of array of synonyms
   def get_synonym(word)
     results = Dinosaurus.synonyms_of(word)
-    ratelimit.add(key)
+    count = redis.get("key")
+    count++
+    redis.set("key",count)
     len = rand(results.length)
     len==0? word : word = results[len]
   end
