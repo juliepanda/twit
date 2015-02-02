@@ -1,13 +1,16 @@
-class Twit < Sinatra::Base 
+require 'sinatra'
+require 'dinosaurus'
+require_relative 'assets/dinokey.rb'
 
   Dinosaurus.configure do |config|
-    config.api_key = DINO_KEY
+    key = Dinokey.new
+    config.api_key = key.generate
   end
 
   before do
-    redis = Redis.new
-    count = 0
-    redis.set("key", count)
+    # redis = Redis.new(:host => 'localhost', :port => 9292, :db => 15)
+    # redis = Redis.new(:host => 'localhost', :port => 9292, :db => 15)
+    # redis.set("key", "0")
     @clicked = false
   end
 
@@ -22,16 +25,17 @@ class Twit < Sinatra::Base
   post '/tweet' do 
     @clicked = true
     word = rejoiner(params[:tweet])
-    if (redis.get("key") > 1000)
-      redirect '/error'
-    else
-      @link = "http://twitter.com/home?status=" + word
-      redirect @link
-    end
+    # if hit_limit?
+    #   redirect '/error'
+    # else
+    @link = "http://twitter.com/home?status=" + word
+    redirect @link
+    # end
   end
 
-  def ratelimit
-  end
+  # def hit_limit?
+  #  redis.get("key")>1000? true : false
+  # end
 
 
   def rejoiner(string)
@@ -52,18 +56,30 @@ class Twit < Sinatra::Base
       "him", "her", "other", "there", "they", "them", "that", "this", "me", "my", "his",
       "hers", "their"]
 
-    val = word_ary.include? word
-
-    val==false ? get_synonym(word) : word
-  end
+      val = word_ary.include? word
+      val==false ? get_synonym(word) : word
+    end
 
   # picks random synonym out of array of synonyms
   def get_synonym(word)
     results = Dinosaurus.synonyms_of(word)
-    count = redis.get("key")
-    count++
-    redis.set("key",count)
+    # count = redis.get("key")
+
+    # if next_day? || count == "0"
+    #   redis.set("key", "1")
+    #   timer.set("t0", Time.now)
+    # else
+    #   count++
+    #   redis.incr("key")
+    #   timer.set("t1", Time.now)
+    # end
+
     len = rand(results.length)
     len==0? word : word = results[len]
   end
-end
+
+  # def next_day?
+  #   diff = timer.get("t1") - timer.get("t0")
+  #   diff<86400? false : true
+  # end
+
